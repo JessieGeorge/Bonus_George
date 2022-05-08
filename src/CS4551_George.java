@@ -21,44 +21,37 @@ public class CS4551_George {
 		
 		BufferedReader br = new BufferedReader(
 				new InputStreamReader(System.in));
-		
-		String message = "Main Menu-----------------------------------\r\n"
-				+ "1. Conversion to Gray-scale Image (24bits->8bits)\r\n"
-				+ "2. Conversion to Binary Image "
-				+ "using Ordered Dithering (k=4)\r\n"
-				+ "3. Conversion to 8bit Indexed Color Image "
-				+ "using Uniform Color Quantization (24bits->8bits)\r\n"
-				+ "4. Quit\r\n"
-				+ "Please enter the task number [1-4]:";
 				
+		String message = "Main Menu-----------------------------------\n"
+				+ "1. 8-bit UCQ and Error Diffusion\n"
+				+ "2. Generic UCQ and Error Diffusion\n"
+				+ "3. Quit\n"
+				+ "Please enter the task number [1-3]:";
 		
 		int choice = 0;
 		
-		while (choice != 4) {
+		while (choice != 3) {
 			System.out.println(message);
 			choice = Integer.parseInt(br.readLine());
 			
 			MImage copyImg = null; // initialize
-			if (choice > 0 && choice < 4) {
+			if (choice > 0 && choice < 3) {
 				System.out.println("\nMaking a copy "
 						+ "of original image to edit.");
 				copyImg = new MImage(img.getName());
 			}
 			
-			switch(choice) {
+			switch(choice) {	
 				case 1:
-					Grayscale.main(copyImg, shortName);
-					break;
-					
-				case 2:
-					OrderedDithering.main(copyImg, shortName);
-					break;
-					
-				case 3:
 					UCQ.main(copyImg, shortName);
 					break;
 					
-				case 4:
+				case 2:
+					// TODO: Fix for generic
+					UCQ.main(copyImg, shortName);
+					break;
+					
+				case 3:
 					System.exit(0);
 					break;
 					
