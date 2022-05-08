@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 
 public class CS4551_George {
 	
+	static BufferedReader br;
+	
 	public static String getImageShortName(MImage img) {
 		// remove leading path and .ppm from image file name
 		
@@ -15,11 +17,27 @@ public class CS4551_George {
 		return shortName;
 	}
 	
+	public static int[] getUserBits() throws IOException {
+		
+		int[] colorBits = new int[3];
+		
+		System.out.println("\nEnter number of index bits for Red channel:");
+		colorBits[0] = Integer.parseInt(br.readLine());
+		
+		System.out.println("Enter number of index bits for Green channel:");
+		colorBits[1] = Integer.parseInt(br.readLine());
+		
+		System.out.println("Enter number of index bits for Blue channel:");
+		colorBits[2] = Integer.parseInt(br.readLine());
+		
+		return colorBits;
+	}
+	
 	public static void menu(MImage img) throws IOException {
 		
 		String shortName = getImageShortName(img);
 		
-		BufferedReader br = new BufferedReader(
+		br = new BufferedReader(
 				new InputStreamReader(System.in));
 				
 		String message = "Main Menu-----------------------------------\n"
@@ -43,12 +61,16 @@ public class CS4551_George {
 			
 			switch(choice) {	
 				case 1:
+					// TODO: send 332 to generic
 					UCQ.main(copyImg, shortName);
 					break;
 					
 				case 2:
-					// TODO: Fix for generic
-					UCQ.main(copyImg, shortName);
+					int[] colorBits = getUserBits();
+					GenericUCQ U = new GenericUCQ(colorBits[0], 
+													colorBits[1], 
+													colorBits[2]);
+					U.process(copyImg, shortName);
 					break;
 					
 				case 3:
