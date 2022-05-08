@@ -1,6 +1,3 @@
-import java.util.Arrays;
-import java.util.Random; // REMOVETHIS
-
 public class GenericUCQ {
 	
 	// 256 color values, 3 because we store R,G,B for each color
@@ -38,8 +35,6 @@ public class GenericUCQ {
 	}
 	
 	public void initLUT() {
-		//System.out.println("totalBits = " + totalBits); // REMOVETHIS
-		
 		System.out.println();
 		System.out.println("LUT by UCQ");
 		System.out.println("Index	R	G	B");
@@ -52,37 +47,15 @@ public class GenericUCQ {
 			String binaryIndexPadded = String.format(formatter, binaryIndex)
 					.replaceAll(" ", "0");
 			
-			/*
-			System.out.println("formatter = " + formatter); // REMOVETHIS
-			System.out.println("binaryIndex = " + binaryIndex); /// REMOVETHIS
-			*/
-			
-			//System.out.println("binaryIndexPadded = " + binaryIndexPadded); /// REMOVETHIS
-			
-			//System.exit(1); // REMOVETHIS
-			
-			
 			// BI stands for binary index
 			String redBI = binaryIndexPadded.substring(0, nr);
 			String greenBI = binaryIndexPadded.substring(nr, nr + ng);
 			String blueBI = binaryIndexPadded.substring(nr + ng, totalBits);
 			
-			/*
-			System.out.println("redBI = " + redBI); /// REMOVETHIS
-			System.out.println("greenBI = " + greenBI); /// REMOVETHIS
-			System.out.println("blueBI = " + blueBI); /// REMOVETHIS
-			*/
-			
 			// parse binary string to decimal integer
 			int redInt = Integer.parseInt(redBI, 2);
 			int greenInt = Integer.parseInt(greenBI, 2);
 			int blueInt = Integer.parseInt(blueBI, 2);
-			
-			/*
-			System.out.println("redInt = " + redInt); /// REMOVETHIS
-			System.out.println("greenInt = " + greenInt); /// REMOVETHIS
-			System.out.println("blueInt = " + blueInt); /// REMOVETHIS
-			*/
 			
 			// representative color in the center of the range
 			int red = redInt * quantr + (quantr / 2);
@@ -202,17 +175,9 @@ public class GenericUCQ {
 				originalGreen = rgb[1];
 				originalBlue = rgb[2];
 				
-				//System.out.println("rgb = " + Arrays.toString(rgb)); // REMOVETHIS
-				
 				int redIndex = (int)Math.floor(rgb[0] / quantr);
 				int greenIndex = (int)Math.floor(rgb[1] / quantg);
 				int blueIndex = (int)Math.floor(rgb[2] / quantb);
-				
-				/*
-				System.out.println("redIndex = " + redIndex); /// REMOVETHIS
-				System.out.println("greenIndex = " + greenIndex); /// REMOVETHIS
-				System.out.println("blueIndex = " + blueIndex); /// REMOVETHIS
-				*/
 				
 				// BI stands for binary index
 				String redBI = Integer.toBinaryString(redIndex);
@@ -230,20 +195,10 @@ public class GenericUCQ {
 				String blueBIPadded = String.format(blueformatter, blueBI)
 						.replaceAll(" ", "0");
 				
-				/*
-				System.out.println("redBIPadded = " + redBIPadded); /// REMOVETHIS
-				System.out.println("greenBIPadded = " + greenBIPadded); /// REMOVETHIS
-				System.out.println("blueBIPadded = " + blueBIPadded); /// REMOVETHIS
-				*/
-				
 				// look up table binary index
 				String lutBI = redBIPadded + greenBIPadded + blueBIPadded;
 				
-				//System.out.println("lutBI = " + lutBI); /// REMOVETHIS
-				
 				int lutIndex = Integer.parseInt(lutBI, 2);
-				
-				//System.out.println("lutIndex = " + lutIndex); /// REMOVETHIS
 				
 				quantizedRed = LUT[lutIndex][0];
 				quantizedGreen = LUT[lutIndex][1];
@@ -253,27 +208,7 @@ public class GenericUCQ {
 				errorGreen = originalGreen - quantizedGreen;
 				errorBlue = originalBlue - quantizedBlue;
 				
-				/*
-				System.out.println("originalRed = " + originalRed); // REMOVETHIS
-				System.out.println("quantizedRed = " + quantizedRed); // REMOVETHIS
-				System.out.println("errorRed = " + errorRed); // REMOVETHIS
-				
-				System.out.println("originalGreen = " + originalGreen); // REMOVETHIS
-				System.out.println("quantizedGreen = " + quantizedGreen); // REMOVETHIS
-				System.out.println("errorGreen = " + errorGreen); // REMOVETHIS
-				
-				System.out.println("originalBlue = " + originalBlue); // REMOVETHIS
-				System.out.println("quantizedBlue = " + quantizedBlue); // REMOVETHIS
-				System.out.println("errorBlue = " + errorBlue); // REMOVETHIS
-				*/
-				
-				//img.write2PPM("TEST-BEFORE.ppm"); // REMOVETHIS
-				
 				errorDiffuse(copyImg, x, y, errorRed, errorGreen, errorBlue);
-				
-				//img.write2PPM("TEST-AFTER.ppm"); // REMOVETHIS
-				
-				//System.exit(1); // REMOVETHIS
 				
 				// make gray-scale
 				rgb[0] = lutIndex;
