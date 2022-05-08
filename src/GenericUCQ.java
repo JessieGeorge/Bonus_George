@@ -94,10 +94,18 @@ public class GenericUCQ {
 		int h = img.getH();
 		int[] rgb = new int[3];
 		
+		int originalRed, originalGreen, originalBlue;
+		int quantizedRed, quantizedGreen, quantizedBlue;
+		int errorRed, errorGreen, errorBlue;
+		
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
 				
 				img.getPixel(x, y, rgb);
+				
+				originalRed = rgb[0];
+				originalGreen = rgb[1];
+				originalBlue = rgb[2];
 				
 				//System.out.println("rgb = " + Arrays.toString(rgb)); // REMOVETHIS
 				
@@ -141,6 +149,28 @@ public class GenericUCQ {
 				int lutIndex = Integer.parseInt(lutBI, 2);
 				
 				//System.out.println("lutIndex = " + lutIndex); /// REMOVETHIS
+				
+				quantizedRed = LUT[lutIndex][0];
+				quantizedGreen = LUT[lutIndex][1];
+				quantizedBlue = LUT[lutIndex][2];
+				
+				errorRed = originalRed - quantizedRed;
+				errorGreen = originalGreen - quantizedGreen;
+				errorBlue = originalBlue - quantizedBlue;
+				
+				/*
+				System.out.println("originalRed = " + originalRed); // REMOVETHIS
+				System.out.println("quantizedRed = " + quantizedRed); // REMOVETHIS
+				System.out.println("errorRed = " + errorRed); // REMOVETHIS
+				
+				System.out.println("originalGreen = " + originalGreen); // REMOVETHIS
+				System.out.println("quantizedGreen = " + quantizedGreen); // REMOVETHIS
+				System.out.println("errorGreen = " + errorGreen); // REMOVETHIS
+				
+				System.out.println("originalBlue = " + originalBlue); // REMOVETHIS
+				System.out.println("quantizedBlue = " + quantizedBlue); // REMOVETHIS
+				System.out.println("errorBlue = " + errorBlue); // REMOVETHIS
+				*/
 				
 				// make gray-scale
 				rgb[0] = lutIndex;
