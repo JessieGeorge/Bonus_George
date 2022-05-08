@@ -61,16 +61,16 @@ public class CS4551_George {
 			
 			switch(choice) {	
 				case 1:
-					// TODO: send 332 to generic
-					UCQ.main(copyImg, shortName);
+					GenericUCQ U8 = new GenericUCQ(3, 3, 2);
+					U8.process(copyImg, shortName);
 					break;
 					
 				case 2:
 					int[] colorBits = getUserBits();
-					GenericUCQ U = new GenericUCQ(colorBits[0], 
+					GenericUCQ GU = new GenericUCQ(colorBits[0], 
 													colorBits[1], 
 													colorBits[2]);
-					U.process(copyImg, shortName);
+					GU.process(copyImg, shortName);
 					break;
 					
 				case 3:

@@ -7,6 +7,10 @@ public class GenericUCQ {
 	
 	// number of index bits for a channel, named as per Canvas
 	int nr, ng, nb;
+	
+	// used for naming output images
+	String channelBits;
+	
 	int totalBits;
 	
 	// quantization steps for a channel
@@ -16,6 +20,7 @@ public class GenericUCQ {
 		this.nr = nr;
 		this.ng = ng;
 		this.nb = nb; 
+		channelBits = nr + "-" + ng + "-" + nb;
 		this.totalBits = nr + ng + nb;
 		
 		this.quantr = (int)Math.pow(2, 8 - nr);
@@ -147,7 +152,7 @@ public class GenericUCQ {
 		}
 		
 		// Save it into another PPM file.
-		img.write2PPM(imageShortName + "-index" + totalBits + ".ppm");
+		img.write2PPM(imageShortName + "-index-" + channelBits + ".ppm");
 		
 		return img;
 	}
@@ -173,7 +178,7 @@ public class GenericUCQ {
 		}
 		
 		// Save it into another PPM file.
-		indexImage.write2PPM(imageShortName + "-QT8.ppm");
+		indexImage.write2PPM(imageShortName + "-QT-" + channelBits + ".ppm");
 		
 	}
 	
