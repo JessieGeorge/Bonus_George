@@ -16,6 +16,12 @@ public class GenericUCQ {
 	// quantization steps for a channel
 	int quantr, quantg, quantb;
 	
+	// Floyd weight factors for error diffusion
+	final double rightFloyd = 7/16.0;
+	final double bottomLeftFloyd = 3/16.0;
+	final double bottomMidFloyd = 5/16.0;
+	final double bottomRightFloyd = 1/16.0;
+	
 	public GenericUCQ(int nr, int ng, int nb) {
 		this.nr = nr;
 		this.ng = ng;
@@ -87,6 +93,40 @@ public class GenericUCQ {
 			System.out.println(i + "\t" + red + "\t" + green + "\t" + blue);
 		}
 		System.out.println();
+	}
+	
+	public boolean isValidPos(int x, int y) {
+		
+	}
+	
+	public int[] clip(int[] rgb) {
+		
+		for (int i = 0; i < 3; i++) {
+			int val = rgb[i];
+			
+			if (val < 0) {
+				rgb[i] = 0;
+			} else if (val > 255) {
+				rgb[i] = 255;
+			} // else rgb[i] stays the same because it's in range
+		}
+		
+		return rgb;
+	}
+	
+	public void errorDiffuse(MImage img, int x, int y, 
+			int errorRed, int errorGreen, int errorBlue) {
+		
+		int[] rgb = new int[3];
+		
+		// right pixel
+		img.getPixel(x + 1, y, rgb);
+		rgb[0] = rgb[0] + (int)Math.round(rightFloyd * errorRed);
+		rgb[1] = rgb[1] + (int)Math.round(rightFloyd * errorGreen);
+		rgb[2] = rgb[2] + (int)Math.round(rightFloyd * errorBlue);
+		rgb = this.clip(rgb);
+		
+		
 	}
 	
 	public MImage createIndexImage(MImage img, String imageShortName) {
@@ -171,6 +211,7 @@ public class GenericUCQ {
 				System.out.println("quantizedBlue = " + quantizedBlue); // REMOVETHIS
 				System.out.println("errorBlue = " + errorBlue); // REMOVETHIS
 				*/
+				this.errorDiffuse(img, x, y, errorRed, errorGreen, errorBlue);
 				
 				// make gray-scale
 				rgb[0] = lutIndex;
