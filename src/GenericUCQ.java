@@ -7,11 +7,18 @@ public class GenericUCQ {
 	int nr, ng, nb;
 	int totalBits;
 	
+	// quantization steps for a channel
+	int quantr, quantg, quantb;
+	
 	public GenericUCQ(int nr, int ng, int nb) {
-		nr = nr;
-		ng = ng;
-		nb = nb; 
-		totalBits = nr + ng + nb;
+		this.nr = nr;
+		this.ng = ng;
+		this.nb = nb; 
+		this.totalBits = nr + ng + nb;
+		
+		this.quantr = (int)Math.pow(2, 8 - nr);
+		this.quantg = (int)Math.pow(2, 8 - ng);
+		this.quantb = (int)Math.pow(2, 8 - nb);
 	}
 	
 	public void initLUT() {
@@ -32,23 +39,39 @@ public class GenericUCQ {
 			/*
 			System.out.println("formatter = " + formatter); // REMOVETHIS
 			System.out.println("binaryIndex = " + binaryIndex); /// REMOVETHIS
-			System.out.println("binaryIndexPadded = " + binaryIndexPadded); /// REMOVETHIS
-			System.exit(1); // REMOVETHIS
 			*/
 			
-			// BI stands for binary index
-			String redBI = binaryIndexPadded.substring(0, 3);
-			String greenBI = binaryIndexPadded.substring(3, 6);
-			String blueBI = binaryIndexPadded.substring(6, 8);
+			System.out.println("binaryIndexPadded = " + binaryIndexPadded); /// REMOVETHIS
 			
+			//System.exit(1); // REMOVETHIS
+			
+			
+			// BI stands for binary index
+			String redBI = binaryIndexPadded.substring(0, nr);
+			String greenBI = binaryIndexPadded.substring(nr, nr + ng);
+			String blueBI = binaryIndexPadded.substring(nr + ng, totalBits);
+			
+			/*
+			System.out.println("redBI = " + redBI); /// REMOVETHIS
+			System.out.println("greenBI = " + greenBI); /// REMOVETHIS
+			System.out.println("blueBI = " + blueBI); /// REMOVETHIS
+			*/
+			
+			// parse binary string to decimal integer
 			int redInt = Integer.parseInt(redBI, 2);
 			int greenInt = Integer.parseInt(greenBI, 2);
 			int blueInt = Integer.parseInt(blueBI, 2);
 			
+			/*
+			System.out.println("redInt = " + redInt); /// REMOVETHIS
+			System.out.println("greenInt = " + greenInt); /// REMOVETHIS
+			System.out.println("blueInt = " + blueInt); /// REMOVETHIS
+			*/
+			
 			// representative color in the center of the range
-			int red = redInt * 32 + 16;
-			int green = greenInt * 32 + 16;
-			int blue = blueInt * 64 + 32;
+			int red = redInt * quantr + (quantr / 2);
+			int green = greenInt * quantg + (quantg / 2);
+			int blue = blueInt * quantb + (quantb / 2);
 			
 			LUT[i][0] = red;
 			LUT[i][1] = green;
@@ -135,6 +158,7 @@ public class GenericUCQ {
 		System.out.println("Performing Uniform Color Quantization ...");
 		
 		this.initLUT();
+		System.exit(1); // REMOVETHIS
 		
 		MImage indexImage = this.createIndexImage(img, imageShortName);
 		
