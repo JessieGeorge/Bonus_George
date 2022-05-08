@@ -52,17 +52,10 @@ public class CS4551_George {
 			System.out.println(message);
 			choice = Integer.parseInt(br.readLine());
 			
-			MImage copyImg = null; // initialize
-			if (choice > 0 && choice < 3) {
-				System.out.println("\nMaking a copy "
-						+ "of original image to edit.");
-				copyImg = new MImage(img.getName());
-			}
-			
 			switch(choice) {	
 				case 1:
 					GenericUCQ U8 = new GenericUCQ(3, 3, 2);
-					U8.process(copyImg, shortName);
+					U8.process(img, shortName);
 					break;
 					
 				case 2:
@@ -70,7 +63,7 @@ public class CS4551_George {
 					GenericUCQ GU = new GenericUCQ(colorBits[0], 
 													colorBits[1], 
 													colorBits[2]);
-					GU.process(copyImg, shortName);
+					GU.process(img, shortName);
 					break;
 					
 				case 3:

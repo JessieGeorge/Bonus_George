@@ -23,6 +23,8 @@ public class GenericUCQ {
 	final double bottomMidFloyd = 5/16.0;
 	final double bottomRightFloyd = 1/16.0;
 	
+	String originalImageName;
+	
 	public GenericUCQ(int nr, int ng, int nb) {
 		this.nr = nr;
 		this.ng = ng;
@@ -36,7 +38,7 @@ public class GenericUCQ {
 	}
 	
 	public void initLUT() {
-		System.out.println("totalBits = " + totalBits);
+		//System.out.println("totalBits = " + totalBits); // REMOVETHIS
 		
 		System.out.println();
 		System.out.println("LUT by UCQ");
@@ -174,8 +176,17 @@ public class GenericUCQ {
 	}
 	
 	public MImage createIndexImage(MImage img, String imageShortName) {
-		int w = img.getW();
-		int h = img.getH();
+		
+		System.out.println("\nMaking a copy of original image to edit"
+				+ " for error diffusion.");
+		MImage copyImg = new MImage(originalImageName);
+		
+		System.out.println("\nMaking a copy of original image to edit"
+				+ " for grayscale index image.");
+		MImage indexImg = new MImage(originalImageName);
+		
+		int w = copyImg.getW();
+		int h = copyImg.getH();
 		int[] rgb = new int[3];
 		
 		int originalRed, originalGreen, originalBlue;
@@ -185,7 +196,7 @@ public class GenericUCQ {
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
 				
-				img.getPixel(x, y, rgb);
+				copyImg.getPixel(x, y, rgb);
 				
 				originalRed = rgb[0];
 				originalGreen = rgb[1];
@@ -258,7 +269,7 @@ public class GenericUCQ {
 				
 				//img.write2PPM("TEST-BEFORE.ppm"); // REMOVETHIS
 				
-				errorDiffuse(img, x, y, errorRed, errorGreen, errorBlue);
+				errorDiffuse(copyImg, x, y, errorRed, errorGreen, errorBlue);
 				
 				//img.write2PPM("TEST-AFTER.ppm"); // REMOVETHIS
 				
@@ -269,49 +280,54 @@ public class GenericUCQ {
 				rgb[1] = lutIndex;
 				rgb[2] = lutIndex;
 				
-				img.setPixel(x, y, rgb);
+				indexImg.setPixel(x, y, rgb);
 			}
 		}
 		
 		// Save it into another PPM file.
-		img.write2PPM(imageShortName + "-index-" + channelBits + ".ppm");
+		indexImg.write2PPM(imageShortName + "-index-" + channelBits + ".ppm");
 		
-		return img;
+		return indexImg;
 	}
 	
-	public void createQuantizedImage(MImage indexImage, 
+	public void createQuantizedImage(MImage indexImg, 
 			String imageShortName) {
 		
-		int w = indexImage.getW();
-		int h = indexImage.getH();
+		int w = indexImg.getW();
+		int h = indexImg.getH();
 		int[] rgb = new int[3];
+		
+		System.out.println("\nMaking a copy of original image to edit"
+				+ " for quantized image.");
+		MImage quantizedImg = new MImage(originalImageName);
 		
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
-				indexImage.getPixel(x, y, rgb);
+				indexImg.getPixel(x, y, rgb);
 				int gray = rgb[0];
 				
 				rgb[0] = LUT[gray][0];
 				rgb[1] = LUT[gray][1];
 				rgb[2] = LUT[gray][2];
 				
-				indexImage.setPixel(x, y, rgb);
+				quantizedImg.setPixel(x, y, rgb);
 			}
 		}
 		
 		// Save it into another PPM file.
-		indexImage.write2PPM(imageShortName + "-QT-" + channelBits + ".ppm");
+		quantizedImg.write2PPM(imageShortName + "-QT-" + channelBits + ".ppm");
 		
 	}
 	
 	public void process(MImage img, String imageShortName) {
-		System.out.println("Performing Uniform Color Quantization ...");
+		
+		originalImageName = img.getName();
 		
 		initLUT();
 		
-		MImage indexImage = createIndexImage(img, imageShortName);
+		MImage indexImg = createIndexImage(img, imageShortName);
 
-		createQuantizedImage(indexImage, imageShortName);
+		createQuantizedImage(indexImg, imageShortName);
 	}
 
 }
