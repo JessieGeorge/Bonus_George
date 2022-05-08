@@ -95,8 +95,11 @@ public class GenericUCQ {
 		System.out.println();
 	}
 	
-	public boolean isValidPos(int x, int y) {
+	public boolean isValidPos(MImage img, int x, int y) {
+		int w = img.getW();
+		int h = img.getH();
 		
+		return (x >= 0 && x < w) && (y >= 0 && y < h);
 	}
 	
 	public int[] clip(int[] rgb) {
@@ -120,13 +123,51 @@ public class GenericUCQ {
 		int[] rgb = new int[3];
 		
 		// right pixel
-		img.getPixel(x + 1, y, rgb);
-		rgb[0] = rgb[0] + (int)Math.round(rightFloyd * errorRed);
-		rgb[1] = rgb[1] + (int)Math.round(rightFloyd * errorGreen);
-		rgb[2] = rgb[2] + (int)Math.round(rightFloyd * errorBlue);
-		rgb = this.clip(rgb);
+		if (isValidPos(img, x + 1, y)) {
+			img.getPixel(x + 1, y, rgb);
+			rgb[0] = rgb[0] + (int)Math.round(rightFloyd * errorRed);
+			rgb[1] = rgb[1] + (int)Math.round(rightFloyd * errorGreen);
+			rgb[2] = rgb[2] + (int)Math.round(rightFloyd * errorBlue);
+			rgb = clip(rgb);
+			img.setPixel(x + 1, y, rgb);
+		}
 		
+		// bottom mid pixel
+		if (isValidPos(img, x, y + 1)) {
+			img.getPixel(x, y + 1, rgb);
+			rgb[0] = rgb[0] + (int)Math.round(bottomMidFloyd * errorRed);
+			rgb[1] = rgb[1] + (int)Math.round(bottomMidFloyd * errorGreen);
+			rgb[2] = rgb[2] + (int)Math.round(bottomMidFloyd * errorBlue);
+			rgb = clip(rgb);
+			img.setPixel(x, y + 1, rgb);
+		} else {
+			/* Don't bother checking rest of bottom. 
+			 * We know mid is a valid column, because we're currently in it.
+			 * isValidPos returned false, which means bottom is invalid.
+			 * i.e we're on the lowest row of the image, and we can't go lower.
+			 */
+			return;
+		}
 		
+		// bottom left pixel
+		if (isValidPos(img, x - 1, y + 1)) {
+			img.getPixel(x - 1, y + 1, rgb);
+			rgb[0] = rgb[0] + (int)Math.round(bottomLeftFloyd * errorRed);
+			rgb[1] = rgb[1] + (int)Math.round(bottomLeftFloyd * errorGreen);
+			rgb[2] = rgb[2] + (int)Math.round(bottomLeftFloyd * errorBlue);
+			rgb = clip(rgb);
+			img.setPixel(x - 1, y + 1, rgb);
+		}
+		
+		// bottom right pixel
+		if (isValidPos(img, x + 1, y + 1)) {
+			img.getPixel(x + 1, y + 1, rgb);
+			rgb[0] = rgb[0] + (int)Math.round(bottomRightFloyd * errorRed);
+			rgb[1] = rgb[1] + (int)Math.round(bottomRightFloyd * errorGreen);
+			rgb[2] = rgb[2] + (int)Math.round(bottomRightFloyd * errorBlue);
+			rgb = clip(rgb);
+			img.setPixel(x + 1, y + 1, rgb);
+		}
 	}
 	
 	public MImage createIndexImage(MImage img, String imageShortName) {
@@ -211,7 +252,7 @@ public class GenericUCQ {
 				System.out.println("quantizedBlue = " + quantizedBlue); // REMOVETHIS
 				System.out.println("errorBlue = " + errorBlue); // REMOVETHIS
 				*/
-				this.errorDiffuse(img, x, y, errorRed, errorGreen, errorBlue);
+				errorDiffuse(img, x, y, errorRed, errorGreen, errorBlue);
 				
 				// make gray-scale
 				rgb[0] = lutIndex;
@@ -256,11 +297,11 @@ public class GenericUCQ {
 	public void process(MImage img, String imageShortName) {
 		System.out.println("Performing Uniform Color Quantization ...");
 		
-		this.initLUT();
+		initLUT();
 		
-		MImage indexImage = this.createIndexImage(img, imageShortName);
+		MImage indexImage = createIndexImage(img, imageShortName);
 
-		this.createQuantizedImage(indexImage, imageShortName);
+		createQuantizedImage(indexImage, imageShortName);
 	}
 
 }
