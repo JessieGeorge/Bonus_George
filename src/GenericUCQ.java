@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class GenericUCQ {
 	
 	// 256 color values, 3 because we store R,G,B for each color
@@ -41,7 +43,7 @@ public class GenericUCQ {
 			System.out.println("binaryIndex = " + binaryIndex); /// REMOVETHIS
 			*/
 			
-			System.out.println("binaryIndexPadded = " + binaryIndexPadded); /// REMOVETHIS
+			//System.out.println("binaryIndexPadded = " + binaryIndexPadded); /// REMOVETHIS
 			
 			//System.exit(1); // REMOVETHIS
 			
@@ -92,27 +94,48 @@ public class GenericUCQ {
 				
 				img.getPixel(x, y, rgb);
 				
-				int redIndex = (int)Math.floor(rgb[0] / 32.0);
-				int greenIndex = (int)Math.floor(rgb[1] / 32.0);
-				int blueIndex = (int)Math.floor(rgb[2] / 64.0);
+				//System.out.println("rgb = " + Arrays.toString(rgb)); // REMOVETHIS
+				
+				int redIndex = (int)Math.floor(rgb[0] / quantr);
+				int greenIndex = (int)Math.floor(rgb[1] / quantg);
+				int blueIndex = (int)Math.floor(rgb[2] / quantb);
+				
+				/*
+				System.out.println("redIndex = " + redIndex); /// REMOVETHIS
+				System.out.println("greenIndex = " + greenIndex); /// REMOVETHIS
+				System.out.println("blueIndex = " + blueIndex); /// REMOVETHIS
+				*/
 				
 				// BI stands for binary index
 				String redBI = Integer.toBinaryString(redIndex);
 				String greenBI = Integer.toBinaryString(greenIndex);
 				String blueBI = Integer.toBinaryString(blueIndex);
 				
-				// 3-bit red, 3-bit green, 2-bit blue
-				String redBIPadded = String.format("%3s", redBI)
+				// format color channels based on specified number of index bits
+				String redformatter = "%" + nr + "s";
+				String greenformatter = "%" + ng + "s";
+				String blueformatter = "%" + nb + "s";
+				String redBIPadded = String.format(redformatter, redBI)
 						.replaceAll(" ", "0");
-				String greenBIPadded = String.format("%3s", greenBI)
+				String greenBIPadded = String.format(greenformatter, greenBI)
 						.replaceAll(" ", "0");
-				String blueBIPadded = String.format("%2s", blueBI)
+				String blueBIPadded = String.format(blueformatter, blueBI)
 						.replaceAll(" ", "0");
+				
+				/*
+				System.out.println("redBIPadded = " + redBIPadded); /// REMOVETHIS
+				System.out.println("greenBIPadded = " + greenBIPadded); /// REMOVETHIS
+				System.out.println("blueBIPadded = " + blueBIPadded); /// REMOVETHIS
+				*/
 				
 				// look up table binary index
 				String lutBI = redBIPadded + greenBIPadded + blueBIPadded;
 				
+				//System.out.println("lutBI = " + lutBI); /// REMOVETHIS
+				
 				int lutIndex = Integer.parseInt(lutBI, 2);
+				
+				//System.out.println("lutIndex = " + lutIndex); /// REMOVETHIS
 				
 				// make gray-scale
 				rgb[0] = lutIndex;
@@ -124,7 +147,7 @@ public class GenericUCQ {
 		}
 		
 		// Save it into another PPM file.
-		img.write2PPM(imageShortName + "-index.ppm");
+		img.write2PPM(imageShortName + "-index" + totalBits + ".ppm");
 		
 		return img;
 	}
@@ -158,10 +181,9 @@ public class GenericUCQ {
 		System.out.println("Performing Uniform Color Quantization ...");
 		
 		this.initLUT();
-		System.exit(1); // REMOVETHIS
 		
 		MImage indexImage = this.createIndexImage(img, imageShortName);
-		
+
 		this.createQuantizedImage(indexImage, imageShortName);
 	}
 
