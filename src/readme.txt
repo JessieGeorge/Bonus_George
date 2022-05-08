@@ -46,7 +46,7 @@ isValidPos function returns whether the given coordinates exist in image.
 
 clip function clips pixel value to be in range [0, 255].
 
-errorDiffuse function updates four future pixels based on Floyd weight factor.
+errorDiffuse function updates four future neighbors based on Floyd weight factor.
 It uses the isValidPos and clip functions as helpers.
 
 createIndexImage function:
@@ -58,7 +58,7 @@ For each pixel of the copy image,
 	create an n-bit LUT index. Convert index to integer.
 	Get the quantized R,G,B values from the LUT using that index.
 	Calculate error of original - quantized for each color channel.
-	Error Diffuse to four future pixels based on Floyd weight factor.
+	Error Diffuse to four future neighbors based on Floyd weight factor.
 	Assign integer LUT index to R,G,B to make grayscale index image.
 Output is written to [InputFileName]-index-[number of bits for R-G-B color channels].ppm
 

@@ -67,6 +67,7 @@ public class CS4551_George {
 					break;
 					
 				case 3:
+					System.out.println("--Good Bye--");
 					System.exit(0);
 					break;
 					
@@ -105,8 +106,6 @@ public class CS4551_George {
 		
 		System.out.println(" ");
 		menu(img);
-		
-		System.out.println("--Good Bye--");
 	}
 
 	public static void usage() {
