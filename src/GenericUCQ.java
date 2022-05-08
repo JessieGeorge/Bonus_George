@@ -121,15 +121,7 @@ public class GenericUCQ {
 	public void errorDiffuse(MImage img, int x, int y, 
 			int errorRed, int errorGreen, int errorBlue) {
 		
-		// REMOVETHIS
-		Random random = new Random();
-		for (int j = 0; j < img.getH(); j++) {
-			for (int i = 0; i < img.getW(); i++) {
-				int val = random.nextBoolean() ? 0 : 255;
-				int[] randomColors = {val, val, val}; // black or white
-				img.setPixel(i, j, randomColors);
-			}
-		}
+		// btw img.setPixel updates the img globally, not just in this function
 		
 		int[] rgb = new int[3];
 		
@@ -264,13 +256,13 @@ public class GenericUCQ {
 				System.out.println("errorBlue = " + errorBlue); // REMOVETHIS
 				*/
 				
-				img.write2PPM("TEST-BEFORE.ppm"); // REMOVETHIS
+				//img.write2PPM("TEST-BEFORE.ppm"); // REMOVETHIS
 				
 				errorDiffuse(img, x, y, errorRed, errorGreen, errorBlue);
 				
-				img.write2PPM("TEST-AFTER.ppm"); // REMOVETHIS
+				//img.write2PPM("TEST-AFTER.ppm"); // REMOVETHIS
 				
-				System.exit(1); // REMOVETHIS
+				//System.exit(1); // REMOVETHIS
 				
 				// make gray-scale
 				rgb[0] = lutIndex;
