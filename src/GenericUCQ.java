@@ -26,7 +26,7 @@ public class GenericUCQ {
 		this.nr = nr;
 		this.ng = ng;
 		this.nb = nb; 
-		channelBits = nr + "-" + ng + "-" + nb;
+		channelBits = "r" + nr + "g" + ng + "b" + nb;
 		this.totalBits = nr + ng + nb;
 		
 		this.quantr = (int)Math.pow(2, 8 - nr);
