@@ -177,16 +177,16 @@ public class GenericUCQ {
 				quantizedGreen = LUT[originalGreen][1];
 				quantizedBlue = LUT[originalBlue][2];
 				
+				quantizedRGB[0] = quantizedRed;
+				quantizedRGB[1] = quantizedGreen;
+				quantizedRGB[2] = quantizedBlue;
+				quantizedImg.setPixel(x, y, quantizedRGB);
+				
 				errorRed = originalRed - quantizedRed;
 				errorGreen = originalGreen - quantizedGreen;
 				errorBlue = originalBlue - quantizedBlue;
 				
 				errorDiffuse(copyImg, x, y, errorRed, errorGreen, errorBlue);
-				
-				quantizedRGB[0] = quantizedRed;
-				quantizedRGB[1] = quantizedGreen;
-				quantizedRGB[2] = quantizedBlue;
-				quantizedImg.setPixel(x, y, quantizedRGB);
 			}
 		}
 		

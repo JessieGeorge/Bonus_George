@@ -15,7 +15,8 @@ If that file does not exist, it prints an error and exits the program.
 getImageShortName function removes the leading path and .ppm extension
 from the image file name, which is helpful later when we write output files.
 
-getUserBits function gets user input for number of index bits for each color channel.
+getUserBits function gets user input for number of 
+index bits for each color channel.
 
 menu function prints menu.
 If the user picks first option on the menu, 
@@ -34,12 +35,7 @@ some helper variables, and the quantization steps.
 process function is the controller.
 
 initLUT function initializes the look up table. 
-For each index 0-255,
-	An n-bit binary index is created.
-	This is split into nr-bit red, ng-bit green, and nb-bit blue indices.
-	Convert R, G, B indices from binary to integer.
-	Pick the representative color in the 
-	center of the range based on quantization step variables.
+Quantize R,G,B using the equation from Canvas and store in LUT.
 Print the LUT.
 
 isValidPos function returns whether the given coordinates exist in image.
@@ -49,30 +45,19 @@ clip function clips pixel value to be in range [0, 255].
 errorDiffuse function updates four future neighbors based on Floyd weight factor.
 It uses the isValidPos and clip functions as helpers.
 
-createIndexImage function:
+createQuantizedImage function:
 Copies of the original image is created for editing
 so that the original image is never altered,
 and so that edits don't interfere with each other.
 For each pixel of the copy image,
-	Using the RGB values, and quantization step variables,
-	create an n-bit LUT index. Convert index to integer.
-	Get the quantized R,G,B values from the LUT using that index.
+	Get the quantized R,G,B values from the LUT.
+	Update quantized image.
 	Calculate error of original - quantized for each color channel.
-	Error Diffuse to four future neighbors based on Floyd weight factor.
-	Assign integer LUT index to R,G,B to make grayscale index image.
-Output is written to [InputFileName]-index-[number of bits for R-G-B color channels].ppm
-
-createQuantizedImage function:
-Copy of the original image is created for editing
-so that the original image is never altered.
-For each pixel of the grayscale index image,
-	Get the LUT R,G,B values for that index 
-	and set pixel accordingly in the color quantized image.
-Output is written to [InputFileName]-QT8-[number of bits for R-G-B color channels].ppm
+	Call helper function to error diffuse four future neighbors.
+Output is written to [InputFileName]-QT-[number of bits for rgb color channels].ppm
 
 --
 MImage.java is the utility class.
-Ducky.ppm is the example input.
 
 --
 Compile requirement
