@@ -54,7 +54,7 @@ For each pixel of the copy image,
 	Update quantized image.
 	Calculate error of original - quantized for each color channel.
 	Call helper function to error diffuse four future neighbors.
-Output is written to [InputFileName]-QT-[number of bits for rgb color channels].ppm
+Output is written to [InputFileName]-[number of bits for rgb color channels].ppm
 
 --
 MImage.java is the utility class.

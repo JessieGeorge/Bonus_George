@@ -191,7 +191,7 @@ public class GenericUCQ {
 		}
 		
 		// Save it into another PPM file.
-		quantizedImg.write2PPM(imageShortName + "-QT-" + channelBits + ".ppm");
+		quantizedImg.write2PPM(imageShortName + "-" + channelBits + ".ppm");
 	}
 	
 	public void process(MImage img, String imageShortName) {
