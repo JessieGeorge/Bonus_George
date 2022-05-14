@@ -24,8 +24,6 @@ public class GenericUCQ {
 	
 	String originalImageName;
 	
-	final boolean testPrint = false;
-	
 	public GenericUCQ(int nr, int ng, int nb) {
 		this.nr = nr;
 		this.ng = ng;
@@ -33,16 +31,12 @@ public class GenericUCQ {
 		this.channelBits = "r" + nr + "g" + ng + "b" + nb;
 		this.totalBits = nr + ng + nb;
 		
-		//this.numColors = (int)Math.pow(2, totalBits); // TODO: uncomment?
+		// Each color channel is max 8 bits
+		// So there are 2^8 values of red, 2^8 values of green, 2^8 values of blue 
 		this.numColors = 256;
 		
 		// 3 because we store R,G,B values for each color
 		this.LUT = new int[numColors][3];
-		
-		if (testPrint) {
-			System.out.println("totalBits = " + totalBits); // REMOVETHIS
-			System.out.println("numColors = " + numColors); // REMOVETHIS
-		}
 		
 		this.quantr = Math.pow(2, 8 - nr);
 		this.quantg = Math.pow(2, 8 - ng);
@@ -58,7 +52,8 @@ public class GenericUCQ {
 		
 		for (int i = 0; i < numColors; i++) {
 			
-			// representative color in the center of the range
+			// quantize
+			// pick representative color in the center of the range
 			int red = (int)(Math.floor(i/quantr) * quantr + (quantr / 2));
 			int green = (int)(Math.floor(i/quantg) * quantg + (quantg / 2));
 			int blue = (int)(Math.floor(i/quantb) * quantb + (quantb / 2));
@@ -70,11 +65,6 @@ public class GenericUCQ {
 			System.out.println(i + "\t" + red + "\t" + green + "\t" + blue);
 		}
 		System.out.println();
-		
-		/*
-		System.out.println("I'M EXITING!"); // REMOVETHIS
-		System.exit(1); // REMOVETHIS
-		*/
 	}
 	
 	public boolean isValidPos(MImage img, int x, int y) {
@@ -182,12 +172,6 @@ public class GenericUCQ {
 				originalRed = rgb[0];
 				originalGreen = rgb[1];
 				originalBlue = rgb[2];
-				
-				if (testPrint) {
-					System.out.println("originalRed = " + originalRed); /// REMOVETHIS
-					System.out.println("originalGreen = " + originalGreen); /// REMOVETHIS
-					System.out.println("originalBlue = " + originalBlue); /// REMOVETHIS
-				}
 				
 				quantizedRed = LUT[originalRed][0];
 				quantizedGreen = LUT[originalGreen][1];
