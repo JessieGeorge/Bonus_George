@@ -43,6 +43,21 @@ public class GenericUCQ {
 		this.quantb = Math.pow(2, 8 - nb);
 	}
 	
+	public int getExtremes(int i) {
+		/* if it's just 1 bit for a channel, 
+		 * use this function to get extreme colors (0 or 255)
+		 * as the representative value.
+		 * 
+		 * 128 is the comparison because it's 255/2
+		 */
+		
+		if (i < 128) {
+			return 0;
+		} else {
+			return 255;
+		}
+	}
+	
 	public void initLUT() {
 		
 		System.out.println();
@@ -50,13 +65,28 @@ public class GenericUCQ {
 		System.out.println("Index	R	G	B");
 		System.out.println("-------------------------------------------------");
 		
+		int red, green, blue;
+		
 		for (int i = 0; i < numColors; i++) {
-			
 			// quantize
-			// pick representative color in the center of the range
-			int red = (int)(Math.floor(i/quantr) * quantr + (quantr / 2));
-			int green = (int)(Math.floor(i/quantg) * quantg + (quantg / 2));
-			int blue = (int)(Math.floor(i/quantb) * quantb + (quantb / 2));
+			if (nr == 1) {
+				red = getExtremes(i);
+			} else {
+				// pick representative color in the center of the range
+				red = (int)(Math.floor(i/quantr) * quantr + (quantr / 2));
+			}
+			
+			if (ng == 1) {
+				green = getExtremes(i);
+			} else {
+				green = (int)(Math.floor(i/quantg) * quantg + (quantg / 2));
+			}
+			
+			if (nb == 1) {
+				blue = getExtremes(i);
+			} else {
+				blue = (int)(Math.floor(i/quantb) * quantb + (quantb / 2));
+			}
 			
 			LUT[i][0] = red;
 			LUT[i][1] = green;

@@ -34,6 +34,11 @@ some helper variables, and the quantization steps.
 
 process function is the controller.
 
+getExtremes function is a helper to initLUT.
+if user set just 1 bit for a channel, 
+call this function to get extreme colors (0 or 255) as the representative value.
+128 is the comparison because it's 255/2.
+
 initLUT function initializes the look up table. 
 Quantize R,G,B using the equation from Canvas and store in LUT.
 Print the LUT.
