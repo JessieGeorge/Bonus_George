@@ -31,8 +31,8 @@ public class GenericUCQ {
 		this.channelBits = "r" + nr + "g" + ng + "b" + nb;
 		this.totalBits = nr + ng + nb;
 		
-		// Each color channel is max 8 bits
-		// So there are 2^8 values of red, 2^8 values of green, 2^8 values of blue 
+		// Each color channel is max 8 bits, 
+		// so 2^8 values for each color channel.
 		this.numColors = 256;
 		
 		// 3 because we store R,G,B values for each color
